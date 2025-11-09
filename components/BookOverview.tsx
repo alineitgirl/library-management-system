@@ -41,7 +41,7 @@ const BookOverview = ( {title, author, genre, rating, total_copies, available_co
             <p className='font-bebas-neue text-xl text-dark-100'>Забронировать</p>
         </Button>
 
-         <div className="relative flex flex-1 justify-center">
+        <div className="relative flex flex-1 justify-center">
         <div className="relative">
           <BookCover
             variant="wide"
