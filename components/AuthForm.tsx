@@ -17,6 +17,9 @@ import { z, ZodType } from "zod";
 import Link from 'next/link'
 import { FIELD_NAMES, FIELD_TYPES } from '@/constants'
 import ImageUpload from './ImageUpload'
+import { toast } from "@/hooks/use-toast"
+import { useRouter } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
 
 
@@ -35,7 +38,8 @@ const AuthForm = <T extends FieldValues>( {
   onSubmit,
  } : Props<T>) => {
   
-  const isSignIn = type === "SIGN_IN"
+  const isSignIn = type === "SIGN_IN";
+  const router = useRouter();
 
   const form : useFormReturn<T> = useForm({
     resolver: zodResolver(schema),
@@ -43,7 +47,28 @@ const AuthForm = <T extends FieldValues>( {
   })
  
   
-  const handleSubmit  : SubmitHandler<T> = async (data) => {};
+  const handleSubmit  : SubmitHandler<T> = async (data) => {
+    const result = await onSubmit(data);
+
+    if (result.success) {
+      toast({
+        title: 'Success',
+        description: isSignIn ? 'Вы успешно вошли в свой аккаунт.' : 
+        'Вы успешно зарегистрировались в Bookwise.'
+      });
+
+      router.push("/");
+    }
+    else {
+      toast({
+        title: `Ошибка ${isSignIn ? "входа в аккаунт." : "регистрации."}`,
+        description: result.error ?? "Пожалуйста, попробуйте ещё раз.",
+        variant: "destructive",
+      })
+    }
+  };
+
+  
 
   return ( 
      <div className="flex flex-col gap-4">
