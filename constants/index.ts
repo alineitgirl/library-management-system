@@ -16,27 +16,27 @@ export const adminSideBarLinks = [
   {
     img: "/icons/admin/home.svg",
     route: "/admin",
-    text: "Home",
+    text: "Главная",
   },
   {
     img: "/icons/admin/users.svg",
     route: "/admin/users",
-    text: "All Users",
+    text: "Все пользователи",
   },
   {
     img: "/icons/admin/book.svg",
     route: "/admin/books",
-    text: "All Books",
+    text: "Все книги",
   },
   {
     img: "/icons/admin/bookmark.svg",
     route: "/admin/book-requests",
-    text: "Borrow Requests",
+    text: "Управление зявками",
   },
   {
     img: "/icons/admin/user.svg",
     route: "/admin/account-requests",
-    text: "Account Requests",
+    text: "Управление аккаунтами",
   },
 ];
 
