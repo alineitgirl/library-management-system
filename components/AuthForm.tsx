@@ -1,12 +1,10 @@
 'use client'
-import React from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { DefaultValues, SubmitHandler, useForm, useFormReturn, FieldValues, Path } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,6 +15,8 @@ import { z, ZodType } from "zod";
 import Link from 'next/link'
 import { FIELD_NAMES, FIELD_TYPES } from '@/constants'
 import ImageUpload from './ImageUpload'
+import { toast } from '@/hooks/use-toast'
+import { useRouter } from 'next/navigation'
 
 
 
@@ -35,6 +35,7 @@ const AuthForm = <T extends FieldValues>( {
   onSubmit,
  } : Props<T>) => {
   
+  const router = useRouter();
   const isSignIn = type === "SIGN_IN"
 
   const form : useFormReturn<T> = useForm({
@@ -43,7 +44,25 @@ const AuthForm = <T extends FieldValues>( {
   })
  
   
-  const handleSubmit  : SubmitHandler<T> = async (data) => {};
+  const handleSubmit  : SubmitHandler<T> = async (data) => {
+    const result = await onSubmit(data);
+    
+    if (result.success) {
+      toast({
+        title: "Успешно",
+        description: isSignIn ? "Вы успешно вошли в аккаунт" : "Вы успешно зарегистрировались",
+      });
+
+      router.push("/");
+
+    } else {
+      toast({
+        title: `Ошибка ${isSignIn ? "при входе в аккаунт" : "при регистрации"}`,
+        description: result.error ?? "Произошла ошибка",
+        variant: "destructive",
+      })
+    }
+  } 
 
   return ( 
      <div className="flex flex-col gap-4">
@@ -68,7 +87,13 @@ const AuthForm = <T extends FieldValues>( {
               <FormControl>
                 {
                   field.name === "universityCard" ? (
-                    <ImageUpload onFileChange={field.onChange}/>
+                    <ImageUpload 
+                    type="image"
+                    accept="image/*"
+                    placeholder="Загрузите билет"
+                    folder="university-cards"
+                    variant="dark"
+                    onFileChange={field.onChange}/>
                   ) : (
                      <Input required type={
                         FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]
