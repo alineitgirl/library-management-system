@@ -19,5 +19,12 @@ const imagekit = new ImageKit({
 });
 
 export async function GET() {
-    return NextResponse.json(imagekit.getAuthenticationParameters());
+    const result = imagekit.getAuthenticationParameters();
+
+    return NextResponse.json({
+        token: result.token,
+        expire: result.expire,
+        signature: result.signature,
+        publicKey: config.env.imagekit.publicKey
+    });
 }
