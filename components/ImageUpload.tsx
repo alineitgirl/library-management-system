@@ -1,143 +1,161 @@
-'use client';
+"use client";
 
-import { toast } from "@/hooks/use-toast";
 import config from "@/lib/config";
-import { Image } from "@imagekit/next";
+import NextImage from 'next/image';
 import { useRef, useState } from "react";
+import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 const {
   env: {
-    imagekit: { publicKey, urlEndpoint },
-    apiEndpoint,
+    imagekit: { publicKey },
   },
 } = config;
 
-const authenticator = async () => {
-  try {
-    const response = await fetch(`${apiEndpoint}/api/auth/imagekit`);
+interface Props {
+  type: "image" | "video";
+  accept: string;
+  placeholder: string;
+  folder: string;
+  variant: "dark" | "light";
+  onFileChange: (filePath: string) => void;
+  value?: string;
+}
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Request failed with status ${response.status}: ${errorText}`);
-    }
+const FileUpload = ({
+  type,
+  accept,
+  placeholder,
+  folder,
+  variant,
+  onFileChange,
+  value,
+}: Props) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [filePath, setFilePath] = useState<string | null>(value ?? null);
+  const [progress, setProgress] = useState(0);
 
-    const data = await response.json();
-    const { signature, expire, token } = data;
+  const styles = {
+    button:
+      variant === "dark"
+        ? "bg-dark-300"
+        : "bg-light-600 border-gray-100 border",
+    placeholder: variant === "dark" ? "text-light-100" : "text-slate-500",
+    text: variant === "dark" ? "text-light-100" : "text-dark-400",
+  };
 
-    return { signature, expire, token };
-  } catch (error: any) {
-    throw new Error(`Authentication request failed: ${error.message}`);
-  }
-};
+  const onError = (message: string) => {
+    toast({
+      title: `${type} upload failed`,
+      description: message,
+      variant: "destructive",
+    });
+  };
 
-const ImageUpload = ({ onFileChange }: { onFileChange: (filepath: string) => void }) => {
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [filePreview, setFilePreview] = useState<string | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const uploadFile = (file: File) => {
+    if (!onValidate(file)) return;
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
-    if (!selectedFile) return;
+    const endpoint = "https://upload.imagekit.io/api/v1/files/upload";
+    const form = new FormData();
+    form.append("file", file);
+    form.append("fileName", file.name);
+    form.append("folder", folder);
+    form.append("publicKey", publicKey);
+    form.append("useUniqueFileName", "true");
 
-    // Предпросмотр перед загрузкой
-    const previewUrl = URL.createObjectURL(selectedFile);
-    setFilePreview(previewUrl);
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", endpoint);
 
-    try {
-      setIsUploading(true);
-      const { signature, expire, token } = await authenticator();
-
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("publicKey", publicKey);
-      formData.append("signature", signature);
-      formData.append("expire", expire);
-      formData.append("token", token);
-
-      const uploadRes = await fetch("https://upload.imagekit.io/api/v1/files/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const result = await uploadRes.json();
-
-      if (!uploadRes.ok) {
-        throw new Error(result.message || "Ошибка при загрузке файла");
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const percent = Math.round((e.loaded / e.total) * 100);
+        setProgress(percent);
       }
+    };
 
-      setImageUrl(result.url);
-      onFileChange(result.url);
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const res = JSON.parse(xhr.responseText);
+          const url = res.url || res.filePath || null;
+          if (url) {
+            setFilePath(url);
+            onFileChange(url);
+            toast({ title: `${type} uploaded successfully`, description: `${url} uploaded successfully!` });
+          } else {
+            onError("Upload succeeded but response parsing failed.");
+          }
+        } catch (err) {
+          console.error(err);
+          onError("Failed to parse upload response.");
+        }
+      } else {
+        onError(`Upload failed with status ${xhr.status}`);
+      }
+    };
 
-      toast({
-        title: "Файл успешно загружен",
-        description: `${result.name} успешно загружен.`,
-      });
-    } catch (error: any) {
-      console.error(error);
-      toast({
-        title: "Ошибка загрузки",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsUploading(false);
+    xhr.onerror = () => onError("Network error during upload.");
+
+    setProgress(0);
+    xhr.send(form);
+  };
+
+  const onValidate = (file: File) => {
+    if (type === "image") {
+      if (file.size > 20 * 1024 * 1024) {
+        onError("Please upload a file that is less than 20MB in size");
+        return false;
+      }
+    } else if (type === "video") {
+      if (file.size > 50 * 1024 * 1024) {
+        onError("Please upload a file that is less than 50MB in size");
+        return false;
+      }
     }
+
+    return true;
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 border rounded-2xl max-w-sm mx-auto">
+    <div>
       <input
+        ref={inputRef}
         type="file"
-        accept="image/*"
-        ref={fileInputRef}
+        accept={accept}
         className="hidden"
-        onChange={handleFileChange}
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) uploadFile(f);
+        }}
       />
 
       <button
-        className="upload-btn flex items-center gap-2 bg-blue-600 text-white rounded-xl px-4 py-2 disabled:opacity-50"
+        className={cn("upload-btn", styles.button)}
         onClick={(e) => {
           e.preventDefault();
-          fileInputRef.current?.click();
+          inputRef.current?.click();
         }}
-        disabled={isUploading}
       >
-        <Image
-          src="/icons/upload.svg"
-          alt="upload-icon"
-          width={20}
-          height={20}
-          className="object-contain"
-        />
-        <p>{isUploading ? "Загрузка..." : "Загрузить файл"}</p>
+        <NextImage src="/icons/upload.svg" alt="upload-icon" width={20} height={20} className="object-contain" />
+        <p className={cn("text-base", styles.placeholder)}>{placeholder}</p>
+        {filePath && <p className={cn("upload-filename", styles.text)}>{filePath}</p>}
       </button>
 
-      {filePreview && !imageUrl && (
-        <div className="mt-4">
-          <p className="text-sm text-gray-500">Предпросмотр:</p>
-          <img
-            src={filePreview}
-            alt="preview"
-            className="rounded-xl mt-2 max-h-60 object-contain"
-          />
+      {progress > 0 && progress !== 100 && (
+        <div className="w-full rounded-full bg-green-200">
+          <div className="progress" style={{ width: `${progress}%` }}>{progress}%</div>
         </div>
       )}
 
-      {imageUrl && (
-        <div className="mt-4">
-          <p className="text-sm text-gray-500">Загруженное изображение:</p>
-          <Image
-            src={imageUrl}
-            alt="uploaded"
-            width={500}
-            height={500}
-            className="rounded-xl mt-2 object-contain"
-          />
-        </div>
+      {filePath && (
+        type === "image" ? (
+          <NextImage alt={filePath} src={filePath} width={500} height={300} />
+        ) : (
+          <video src={filePath} controls={true} className="h-96 w-full rounded-xl" />
+        )
       )}
     </div>
   );
 };
 
-export default ImageUpload;
+export default FileUpload;
