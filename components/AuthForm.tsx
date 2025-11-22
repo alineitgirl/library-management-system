@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input"
 import { z, ZodType } from "zod";
 import Link from 'next/link'
 import { FIELD_NAMES, FIELD_TYPES } from '@/constants'
-import ImageUpload from './ImageUpload'
+import ImageUpload from '@/components/ImageUpload'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 
