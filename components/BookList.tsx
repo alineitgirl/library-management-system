@@ -1,4 +1,5 @@
 import BookCard from "@/components/BookCard";
+import { Book } from "@/types";
 
 interface Props {
   title: string,
@@ -13,10 +14,14 @@ const BookList = (
     containerClassName
   } : Props
 ) => {
+
+  if (books.length < 2) {
+    return;
+  }
+
   return (
     <section className={containerClassName}>
       <h2 className='font-bebasNeue text-4xl text-light-100'>{title}</h2>
-
       <ul className="book-list">
         {books.map((book) => (
             <BookCard key={book.title} {...book}/>
