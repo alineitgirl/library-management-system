@@ -2,8 +2,24 @@ import React from 'react'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button";
 import BookCover from './BookCover';
+import { Book } from "@/types";
+import { db } from '@/database/drizzle';
+import { users } from "@/database/schema";
+import { eq } from "drizzle-orm";
 
-const BookOverview = ( {title, author, genre, rating, total_copies, available_copies, description, color, cover } : Book) => {
+interface Props extends Book {
+  userId: string;
+}
+
+const BookOverview = async ( {title, author, genre, rating, totalCopies, availableCopies, description, coverColor, coverUrl, id, userId } : Props) => {
+
+  const [user] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+
   return (
    <section className='book-overview'>
     <div className='flex flex-1 flex-row gap-5'>
@@ -27,11 +43,11 @@ const BookOverview = ( {title, author, genre, rating, total_copies, available_co
 
             <div className='book-copies'>
                 <p>
-                    Всего экземпляров: <span>{total_copies}</span>
+                    Всего экземпляров: <span>{totalCopies}</span>
                 </p>
 
                 <p>
-                    Доступно: <span >{available_copies}</span>
+                    Доступно: <span >{availableCopies}</span>
                 </p>
             </div>
 
@@ -48,15 +64,15 @@ const BookOverview = ( {title, author, genre, rating, total_copies, available_co
           <BookCover
             variant="wide"
             className="z-10"
-            coverColor={color}
-            coverImage={cover}
+            coverColor={coverColor}
+            coverImage={coverUrl}
           />
 
           <div className="absolute left-16 top-10 rotate-12 opacity-40 max-sm:hidden">
             <BookCover
               variant="wide"
-              coverColor={color}
-              coverImage={cover}
+              coverColor={coverColor}
+              coverImage={coverUrl}
             />
           </div>
         </div>
