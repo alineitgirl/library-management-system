@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { createBook } from "@/lib/admin/actions/book";
 
 import {
   Form,
@@ -17,6 +18,8 @@ import { bookSchema } from "@/lib/validations";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import FileUpload from "@/components/ImageUpload";
+import ColorPicker from "../ColorPicker";
 
 
 
@@ -181,7 +184,8 @@ const BookForm = ({ type, ...book } : Props) => {
                 Обложка книги
               </FormLabel>
               <FormControl>
-                file upload
+                <FileUpload  type="image" accept="image/*" onFileChange={field.onChange} value={field.value} folder="books/covers"
+                variant="light" placeholder="Загрузить обложку книги"/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -196,7 +200,7 @@ const BookForm = ({ type, ...book } : Props) => {
                 Цвет книги
               </FormLabel>
               <FormControl>
-                color picker
+                <ColorPicker onPickerChange={field.onChange} value={field.value} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -233,7 +237,8 @@ const BookForm = ({ type, ...book } : Props) => {
                 Трейлер
               </FormLabel>
               <FormControl>
-                video upload
+                 <FileUpload  type="video" accept="video/*" onFileChange={field.onChange} value={field.value} folder="books/videos"
+                variant="light" placeholder="Загрузить трейлер"/>
               </FormControl>
               <FormMessage />
             </FormItem>

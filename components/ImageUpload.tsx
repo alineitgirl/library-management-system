@@ -48,7 +48,7 @@ const FileUpload = ({
         ? "bg-dark-300 hover:bg-dark-200"
         : "bg-light-600 border border-gray-200 hover:bg-gray-50",
     text: variant === "dark" ? "text-light-100" : "text-dark-400",
-    placeholder: variant === "dark" ? "text-light-200" : "text-slate-500",
+    placeholder: variant === "dark" ? "text-light-100" : "text-slate-500",
     filename: variant === "dark" ? "text-light-400" : "text-gray-700",
   };
 
@@ -121,14 +121,25 @@ const FileUpload = ({
   };
 
   const onValidate = (file: File): boolean => {
-    const maxSize = type === "image" ? 20 * 1024 * 1024 : 50 * 1024 * 1024;
-    if (file.size > maxSize) {
-      onError(
-        `Файл слишком большой. Максимум ${type === "image" ? "20" : "50"} МБ`
-      );
+   if (type === "image" && file.size > 20 * 1024 * 1024) {
+    toast({
+      title: "Размер файла слишком большой",
+      description: " Пожалуйста, загрузите файл размером меньше 20МБ",
+      variant: "destructive",
+    })
+    return false;
+   } 
+   else if (type === "video") {
+    if (file.size > 50 * 1024 * 1024) {
+      toast({
+        title: "Размер файла слишком большой",
+        description: " Пожалуйста, загрузите файл размером меньше 50МБ",
+        variant: "destructive",
+      })
       return false;
     }
-    return true;
+   }  
+   return true;
   };
 
   return (
@@ -158,7 +169,7 @@ const FileUpload = ({
           height={24}
           className="object-contain"
         />
-        <div className="text-left flex-1">
+        <div className="text-center">
           <p className={cn("text-base", styles.placeholder)}>
             {placeholder}
           </p>

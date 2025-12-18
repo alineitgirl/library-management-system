@@ -15,6 +15,13 @@
       "when": 1763624862660,
       "tag": "0001_broken_absorbing_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1766062816734,
+      "tag": "0002_messy_tenebrous",
+      "breakpoints": true
     }
   ]
 }
