@@ -18,7 +18,7 @@ const Sidebar = ({ session } : { session : Session}) => {
     <div className="admin-sidebar">
         <div>
             <div className='logo'>
-                <Image src="icons/admin/logo.svg" alt="logo" width={37} height={37}/>
+                <Image src="/icons/admin/logo.svg" alt="logo" width={37} height={37}/>
                 <h1>Bookwise</h1>
             </div>
 
