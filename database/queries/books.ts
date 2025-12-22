@@ -22,3 +22,7 @@ export async function getBooksByGenre(genre?: string) : Promise<Book[]> {
     return await query.orderBy(books.title);
 }
 
+export async function getAllBooks() {
+  return await db.select().from(books);
+}
+

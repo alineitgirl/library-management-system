@@ -6,7 +6,7 @@ const Header = ({ session } : { session : Session}) => {
    <header className='admin-header'>
     <div>
         <h2 className='text-2xl text-dark-400 font-semibold'>
-            {session?.user?.name}
+            Добро пожаловать, {session?.user?.name}!
         </h2>
         <p className='text-slate-500 text-base'>Панель для контроля пользователей и книг в библиотеке</p>
     </div>

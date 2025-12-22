@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation'
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { getInitials } from '@/lib/utils';
 import { Session } from 'next-auth';
+import { handleLogout } from '@/lib/actions/auth';
 
 const Sidebar = ({ session } : { session : Session}) => {
 
@@ -53,6 +54,10 @@ const Sidebar = ({ session } : { session : Session}) => {
                 <p className='font-semibold text-dark-200'>{session?.user?.name}</p>
                 <p className='text-xs text-light-500'>{session?.user?.email}</p>
               </div>
+
+                <button onClick={handleLogout} className="cursor-pointer p-2">
+                          <Image src="/icons/logout.svg" alt="logout" width={20} height={20} />
+                </button>
         </div>
     </div>
   )

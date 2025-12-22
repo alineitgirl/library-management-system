@@ -2,8 +2,8 @@
 
 import Filter from '@/components/Filter';
 import Search from '@/components/Search';
-import { getAllGenres } from '@/database/queries/filterbooks';
-import { getBooksByGenre } from '@/database/queries/filterbooks'; 
+import { getAllGenres } from '@/database/queries/books';
+import { getBooksByGenre } from '@/database/queries/books'; 
 import { useState, useEffect, useMemo } from 'react';
 import { Book } from '@/types';
 import BookCard from '@/components/BookCard';
