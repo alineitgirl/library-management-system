@@ -83,7 +83,7 @@ const AuthForm = <T extends FieldValues>( {
           name={field as Path<T>}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='capitalize'>{FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}</FormLabel>
+              <FormLabel>{FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}</FormLabel>
               <FormControl>
                 {
                   field.name === "universityCard" ? (

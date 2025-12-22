@@ -246,7 +246,7 @@ export default function BooksTable({ books }: BooksTableProps) {
               size="sm"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
-              className='text-white bg-primary-admin hover:outline-none'
+              className='text-white bg-primary-admin hover:bg-light-200'
             >
               <ChevronLeft className="h-4 w-4" />
               Назад
@@ -256,7 +256,7 @@ export default function BooksTable({ books }: BooksTableProps) {
               size="sm"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
-              className='text-white bg-primary-admin'
+              className='text-white bg-primary-admin hover:bg-light-200'
             >
               Вперед
               <ChevronRight className="h-4 w-4" />
