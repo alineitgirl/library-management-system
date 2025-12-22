@@ -38,3 +38,14 @@ interface BookParams {
     videoUrl: string;
     summary: string
 }
+
+interface User {
+    id: string;
+    fullName: string;
+    email: string;
+    universityId: number;
+    universityCard: string;
+    status: string;
+    role: string;
+    createdAt: Date;
+}
