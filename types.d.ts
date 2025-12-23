@@ -52,3 +52,9 @@ interface BorrowBookParams
     bookId: string;
     userId: string;
 }
+
+interface StudentIDCardProps {
+    user: User;
+    cardPhotoUrl?: string;
+    qrDataUrl?: string;
+}

@@ -10,8 +10,6 @@ const Header = ({ session } : { session : Session}) => {
         </h2>
         <p className='text-slate-500 text-base'>Панель для контроля пользователей и книг в библиотеке</p>
     </div>
-
-    <p>Поиск</p>
    </header>
   )
 }

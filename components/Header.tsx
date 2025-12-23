@@ -56,7 +56,7 @@ const Header = ({ session }: { session: Session }) => {
         </ul>
 
         <button onClick={handleLogout} className="cursor-pointer p-2">
-          <Image src="/icons/logout.svg" alt="logout" width={40} height={40} />
+          <Image src="/icons/logout.svg" alt="logout" width={25} height={25} />
         </button>
       </div>
     </header>

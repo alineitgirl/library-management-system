@@ -13,7 +13,7 @@ const page = () => {
    </Button>
 
    <section className='w-full mex-w-2xl'>
-        <BookForm />
+        <BookForm type="create" textOnButton='Добавить книгу в библиотеку'/>
    </section>
    </>
   )

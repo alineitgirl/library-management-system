@@ -4,7 +4,6 @@ import { db } from "@/database/drizzle";
 import { books } from "@/database/schema";
 import { auth } from "@/auth";
 import { desc } from "drizzle-orm";
-import { Book } from "@/types";
 
 const Page = async () =>  {
 
