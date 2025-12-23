@@ -18,9 +18,9 @@ const Filter: React.FC<FilterProps> = ({
   };
 
   return (
-    <div className="flex justify-end mb-6">
+    <div className="flex justify-end m-4 items-center px-4">
       <select
-        className="bg-gray-700 text-white px-3 py-2 rounded mx-2"
+        className="bg-gray-800 text-white px-3 py-2 rounded mx-2 font-medium text-light-100"
         value={selectedGenre}
         onChange={handleChange}
       >
