@@ -28,6 +28,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Book } from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
+import { deleteBook } from '@/lib/admin/actions/book';
+import { toast } from '@/hooks/use-toast';
 
 const placeholderCover = '/placeholder-book.jpg';
 
@@ -113,13 +115,18 @@ const columns: ColumnDef<Book>[] = [
             variant="ghost"
             size="icon"
             onClick={async () => {
-              if (confirm('Are you sure you want to delete this book?')) {
+              if (confirm('Вы уверены, что хотите удалить эту книгу?')) {
+                await deleteBook(book.id);
                 console.log('Delete book ID:', book.id);
+                toast({
+                  title: "Успешно",
+                  description: "Книга успешно удалена",
+                })
               }
             }}
             className="hover:bg-red-50 rounded-full"
           >
-           <Link href={`/admin/books/delete/${book.id}`}>
+           <Link href={`/admin/books/`}>
               <Image src="/icons/admin/trash.svg" alt="delete-icon" width={20} height={20} />
             </Link>
           </Button>

@@ -40,7 +40,7 @@ const NotFound: React.FC<NotFoundProps> = ({
             {hasActiveFilters && (
                 <button
                     onClick={onClear}
-                    className='px-8 py-3 bg-amber-500 hover:bg-amber-400 text-black font-semibold rounded-full transition-colors'
+                    className='px-8 py-3 bg-light-200 hover:bg-light-400 text-black font-semibold rounded-full transition-colors'
                 >
                     ОЧИСТИТЬ ПОИСК
                 </button>

@@ -150,7 +150,7 @@ export default function SearchPage() {
           </div>
 
           {totalPages > 1 && (
-            <div className="flex justify-center items-center mt-12 gap-2">
+            <div className="flex justify-end items-center mt-12 gap-2">
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -170,7 +170,7 @@ export default function SearchPage() {
                     onClick={() => goToPage(page as number)}
                     className={`w-10 h-10 flex items-center justify-center rounded transition ${
                       page === currentPage
-                        ? 'bg-amber-500 text-black font-semibold'
+                        ? 'bg-light-200 text-black font-semibold'
                         : 'bg-gray-700 text-white hover:bg-gray-600'
                     }`}
                   >
