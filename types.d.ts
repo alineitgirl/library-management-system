@@ -1,6 +1,3 @@
-import { stringbool } from "zod";
-import { StringValidation } from "zod/v3";
-
 
 interface Book {
     id : string;
@@ -48,4 +45,10 @@ interface User {
     status: string;
     role: string;
     createdAt: Date;
+}
+
+interface BorrowBookParams 
+{
+    bookId: string;
+    userId: string;
 }
