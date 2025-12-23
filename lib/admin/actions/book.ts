@@ -67,3 +67,18 @@ export const updateBook = async (params: UpdateBookParams) => {
     };
   }
 };
+
+export const deleteBook = async (id: string) => {
+  try {
+    await db.delete(books).where(eq(books.id, id));
+    return {
+      success: true,
+    };
+  } catch (error: any) {
+    console.error("Ошибка при удалении книги:", error);
+    return {
+      success: false,
+      message: error.message || "Произошла ошибка при удалении книги",
+    };
+  }
+}
